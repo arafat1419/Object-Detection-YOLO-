@@ -6,6 +6,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
@@ -44,13 +47,14 @@ class ObjectDetection(private val context: Context) {
         frame: Bitmap,
         boxWidth: Float = 0F,
         useLabel: Boolean,
-        onResult: (List<BoundingBox>) -> Unit
-    ): Bitmap {
+        onResult: (List<BoundingBox>, Bitmap) -> Unit,
+    ) {
         val newBitmap = resizeBitmap(frame, TENSOR_WIDTH, TENSOR_HEIGHT)
         val boundingBoxes = detect(newBitmap)
 
         if (boundingBoxes.isNullOrEmpty()) {
-            return newBitmap // No bounding boxes to draw
+            onResult(emptyList(), newBitmap)
+            return // No bounding boxes to draw
         }
 
         val resultBitmap = newBitmap.copy(Bitmap.Config.ARGB_8888, true)
@@ -91,8 +95,7 @@ class ObjectDetection(private val context: Context) {
             resultBitmap
         }
 
-        onResult(boundingBoxes)
-        return newestBitmap
+        onResult(boundingBoxes, newestBitmap)
     }
 
     private fun detect(frame: Bitmap): List<BoundingBox>? {

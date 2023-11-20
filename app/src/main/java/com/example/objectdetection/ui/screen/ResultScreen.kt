@@ -34,7 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.objectdetection.ui.components.MainToolbar
 import com.example.objectdetection.ui.navigation.Navigation
+import com.example.objectdetection.ui.theme.ColorPrimary
 import com.example.objectdetection.utils.ObjectDetection
+import kotlinx.coroutines.delay
 
 @Composable
 fun ResultScreen(
@@ -80,22 +82,42 @@ fun ResultScreen(
                     contentScale = ContentScale.Fit
                 )
 
-                if (filteredBoundingBoxes.size < 2) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                        colors = CardDefaults.cardColors(Color.Red),
-                        shape = RoundedCornerShape(48.dp)
-                    ) {
-                        Text(
+                when (filteredBoundingBoxes.size) {
+                    0 -> {
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp, horizontal = 16.dp),
-                            text = "Incomplete Equipment",
-                            textAlign = TextAlign.Center,
-                            color = Color.White
-                        )
+                                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                            colors = CardDefaults.cardColors(Color.DarkGray),
+                            shape = RoundedCornerShape(48.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                                text = "No Object Detected",
+                                textAlign = TextAlign.Center,
+                                color = Color.White
+                            )
+                        }
+                    }
+                    1 -> {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                            colors = CardDefaults.cardColors(Color.Red),
+                            shape = RoundedCornerShape(48.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                                text = "Incomplete Equipment",
+                                textAlign = TextAlign.Center,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.objectdetection.utils.BoundingBox
 import com.example.objectdetection.utils.ObjectDetection
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,11 +34,13 @@ class SharedViewModel : ViewModel() {
 
     fun detectImage(context: Context, boxWidth: Float) {
         if (!isImageDetected.value) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
+                _isImageDetected.value = false
                 val objectDetection = ObjectDetection(context = context)
                 objectDetection.setup()
-                _bitmap.value = objectDetection.drawImage(frame = _bitmap.value!!, boxWidth, true) {
-                    _boundingBoxes.value = it
+                objectDetection.drawImage(frame = _bitmap.value!!, boxWidth, true) { boundingBoxes, bitmap ->
+                    _boundingBoxes.value = boundingBoxes
+                    _bitmap.value = bitmap
                 }
                 objectDetection.clear()
                 _isImageDetected.value = true
