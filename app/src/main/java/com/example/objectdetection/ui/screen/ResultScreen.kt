@@ -1,5 +1,6 @@
 package com.example.objectdetection.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.objectdetection.ui.components.MainToolbar
@@ -75,6 +79,26 @@ fun ResultScreen(
                     contentDescription = null,
                     contentScale = ContentScale.Fit
                 )
+
+                if (filteredBoundingBoxes.size < 2) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                        colors = CardDefaults.cardColors(Color.Red),
+                        shape = RoundedCornerShape(48.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp, horizontal = 16.dp),
+                            text = "Incomplete Equipment",
+                            textAlign = TextAlign.Center,
+                            color = Color.White
+                        )
+                    }
+                }
+
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
