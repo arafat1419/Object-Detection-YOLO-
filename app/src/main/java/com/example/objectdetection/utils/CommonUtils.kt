@@ -13,6 +13,7 @@ import android.media.ExifInterface
 import android.media.Image
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -21,8 +22,11 @@ import androidx.core.content.FileProvider
 import com.example.objectdetection.BuildConfig
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileWriter
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.Objects
@@ -81,4 +85,28 @@ object CommonUtils {
                 }, ContextCompat.getMainExecutor(this))
             }
         }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentDateTime(): String {
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        return currentDateTime.format(formatter)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentDateTimeInMillis(): Long {
+        return convertToMillis(getCurrentDateTime())
+    }
+
+    fun writeCsvToFile(context: Context, csvData: String, fileName: String) {
+        val file = File(context.getExternalFilesDir(null), fileName)
+        FileWriter(file).use { it.write(csvData) }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertToMillis(timestamp: String): Long {
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        val dateTime = LocalDateTime.parse(timestamp, formatter)
+        return dateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
+    }
 }

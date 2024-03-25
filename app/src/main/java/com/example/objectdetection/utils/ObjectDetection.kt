@@ -6,9 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import android.util.Log
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
@@ -49,8 +47,11 @@ class ObjectDetection(private val context: Context) {
         useLabel: Boolean,
         onResult: (List<BoundingBox>, Bitmap) -> Unit,
     ) {
+        Log.d("LHT", "drawImage")
         val newBitmap = resizeBitmap(frame, TENSOR_WIDTH, TENSOR_HEIGHT)
         val boundingBoxes = detect(newBitmap)
+
+        Log.d("LHT", boundingBoxes.toString())
 
         if (boundingBoxes.isNullOrEmpty()) {
             onResult(emptyList(), newBitmap)
@@ -85,6 +86,8 @@ class ObjectDetection(private val context: Context) {
             }
         }
 
+        Log.d("LHT", "Label Added")
+
         val newestBitmap = if (frame.width < frame.height) {
             if (frame.height > TENSOR_HEIGHT) resizeBitmap(
                 resultBitmap,
@@ -94,6 +97,8 @@ class ObjectDetection(private val context: Context) {
         } else {
             resultBitmap
         }
+
+        Log.d("LHT", "Done")
 
         onResult(boundingBoxes, newestBitmap)
     }
@@ -135,6 +140,7 @@ class ObjectDetection(private val context: Context) {
             val maxConfidenceIndex = cnfArray.indexOfFirst {
                 it == cnf
             }
+//            val cnf = array[c + NUM_ELEMENTS * 4]
 
             if (cnf > CONFIDENCE_THRESHOLD) {
                 val cx = array[c]
@@ -225,7 +231,7 @@ class ObjectDetection(private val context: Context) {
     }
 
     companion object {
-        private const val MODEL_PATH = "model.tflite"
+        private const val MODEL_PATH = "object_float16.tflite"
         private const val TENSOR_WIDTH = 640
         private const val TENSOR_HEIGHT = 640
         private const val TENSOR_WIDTH_FLOAT = TENSOR_WIDTH.toFloat()
@@ -260,7 +266,7 @@ class ObjectDetection(private val context: Context) {
             return Color.rgb(red, green, blue)
         }
 
-        fun getLabelFromIndex(index: Int): String = mapOfLabel[index].toString()
+        fun getLabelFromIndex(index: Int): String = index.toString()
     }
 }
 

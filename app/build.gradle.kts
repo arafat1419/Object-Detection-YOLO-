@@ -40,6 +40,7 @@ android {
         compose = true
         buildConfig = true
         mlModelBinding = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -61,6 +62,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.activity:activity:1.8.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -75,10 +80,23 @@ dependencies {
     implementation ("androidx.camera:camera-lifecycle:${cameraxVersion}")
     implementation ("androidx.camera:camera-camera2:${cameraxVersion}")
     implementation ("androidx.camera:camera-view:$cameraxVersion")
+    implementation ("androidx.camera:camera-video:$cameraxVersion")
+    implementation ("androidx.camera:camera-core:$cameraxVersion")
 
     implementation ("androidx.navigation:navigation-compose:$navVersion")
 
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
     implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
     implementation ("org.tensorflow:tensorflow-lite-gpu:2.13.0")
+    implementation ("org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.0")
+    implementation ("org.tensorflow:tensorflow-lite-task-vision:0.4.0")
+
+    val roomVersion = "2.3.0"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+
+    implementation("com.google.code.gson:gson:2.8.8")
 }

@@ -12,6 +12,7 @@ import com.example.objectdetection.ui.screen.CameraScreen
 import com.example.objectdetection.ui.screen.HomeScreen
 import com.example.objectdetection.ui.screen.ResultScreen
 import com.example.objectdetection.ui.screen.SharedViewModel
+import com.example.objectdetection.ui.screen.VideoScreen
 
 @Composable
 fun NavGraph(
@@ -40,6 +41,9 @@ fun NavGraph(
         }
         composable(Navigation.BACK_SCREEN) {
             navController.popBackStack()
+        }
+        composable(Navigation.VIDEO_SCREEN) {
+            VideoScreen(navigateTo = navActions::navigate, sharedViewModel = sharedViewModel)
         }
     }
 }
